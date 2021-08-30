@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Running VMs - lockc Documentation</title>
+        <title>Use libvirt - lockc Documentation</title>
         <!-- Custom HTML head -->
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="**lockc** is open source software for providing MAC (Mandatory Access Control) implemented in Rust">
@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../architecture.html"><strong aria-hidden="true">2.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="../configuration.html"><strong aria-hidden="true">3.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../build/index.html"><strong aria-hidden="true">3.1.</strong> Build</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../build/containerized.html"><strong aria-hidden="true">3.1.1.</strong> Containerized</a></li><li class="chapter-item expanded "><a href="../build/meson.html"><strong aria-hidden="true">3.1.2.</strong> Meson</a></li></ol></li><li class="chapter-item expanded "><a href="../use/index.html"><strong aria-hidden="true">3.2.</strong> Use</a></li><li class="chapter-item expanded "><a href="../terraform/index.html"><strong aria-hidden="true">3.3.</strong> Provision</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../terraform/base-image.html"><strong aria-hidden="true">3.3.1.</strong> Base image</a></li><li class="chapter-item expanded "><a href="../terraform/custom-kernel.html"><strong aria-hidden="true">3.3.2.</strong> (Optional) Custom kernel</a></li><li class="chapter-item expanded "><a href="../terraform/conf-libvirt.html"><strong aria-hidden="true">3.3.3.</strong> Configure libvirt</a></li><li class="chapter-item expanded "><a href="../terraform/start-vm.html" class="active"><strong aria-hidden="true">3.3.4.</strong> Running VMs</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../architecture.html"><strong aria-hidden="true">2.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="../configuration.html"><strong aria-hidden="true">3.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../build/index.html"><strong aria-hidden="true">3.1.</strong> Build</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../build/containerized.html"><strong aria-hidden="true">3.1.1.</strong> Containerized</a></li><li class="chapter-item expanded "><a href="../build/meson.html"><strong aria-hidden="true">3.1.2.</strong> Meson</a></li></ol></li><li class="chapter-item expanded "><a href="../use/index.html"><strong aria-hidden="true">3.2.</strong> Use</a></li><li class="chapter-item expanded "><a href="../terraform/index.html"><strong aria-hidden="true">3.3.</strong> Provision</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../terraform/base-image.html"><strong aria-hidden="true">3.3.1.</strong> Base image</a></li><li class="chapter-item expanded "><a href="../terraform/custom-kernel.html"><strong aria-hidden="true">3.3.2.</strong> (Optional) Custom kernel</a></li><li class="chapter-item expanded "><a href="../terraform/libvirt.html" class="active"><strong aria-hidden="true">3.3.3.</strong> Use libvirt</a></li><li class="chapter-item expanded "><a href="../terraform/openstack.html"><strong aria-hidden="true">3.3.4.</strong> Use OpenStack</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -134,7 +134,19 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h4 id="running-vms"><a class="header" href="#running-vms">Running VMs</a></h4>
+                        <h4 id="configure-libvirt"><a class="header" href="#configure-libvirt">Configure libvirt</a></h4>
+<p>VMs which we are going to run are using 9p to mount the source tree. To
+ensure that those mounts are going to work correctly, open the
+<code>/etc/libvirt/qemu.conf</code> file and ensure that the following options
+are present there:</p>
+<pre><code class="language-bash">user = &quot;root&quot;
+group = &quot;root&quot;
+dynamic_ownership = 0
+</code></pre>
+<p>If you had to edit the configuration, save the file and restart libvirt:</p>
+<pre><code class="language-bash">sudo systemctl restart libvirtd
+</code></pre>
+<h4 id="running-vms"><a class="header" href="#running-vms">Running VMs</a></h4>
 <p>Now it's time to prepare Terraform environment.</p>
 <pre><code class="language-bash">cd contrib/terraform/libvirt
 cp terraform.tfvars.json.example terraform.tfvars.json
@@ -212,8 +224,11 @@ different than in the following example.</p>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../terraform/conf-libvirt.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../terraform/custom-kernel.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../terraform/openstack.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
                             </a>
                         <div style="clear: both"></div>
                     </nav>
@@ -221,8 +236,11 @@ different than in the following example.</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../terraform/conf-libvirt.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../terraform/custom-kernel.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../terraform/openstack.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
