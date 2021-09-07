@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="architecture.html"><strong aria-hidden="true">2.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">3.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/index.html"><strong aria-hidden="true">3.1.</strong> Build</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/containerized.html"><strong aria-hidden="true">3.1.1.</strong> Containerized</a></li><li class="chapter-item expanded "><a href="build/meson.html"><strong aria-hidden="true">3.1.2.</strong> Meson</a></li></ol></li><li class="chapter-item expanded "><a href="use/index.html"><strong aria-hidden="true">3.2.</strong> Use</a></li><li class="chapter-item expanded "><a href="terraform/index.html"><strong aria-hidden="true">3.3.</strong> Provision</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="terraform/base-image.html"><strong aria-hidden="true">3.3.1.</strong> Base image</a></li><li class="chapter-item expanded "><a href="terraform/custom-kernel.html"><strong aria-hidden="true">3.3.2.</strong> (Optional) Custom kernel</a></li><li class="chapter-item expanded "><a href="terraform/libvirt.html"><strong aria-hidden="true">3.3.3.</strong> Use libvirt</a></li><li class="chapter-item expanded "><a href="terraform/openstack.html"><strong aria-hidden="true">3.3.4.</strong> Use OpenStack</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="architecture.html"><strong aria-hidden="true">2.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">3.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/index.html"><strong aria-hidden="true">3.1.</strong> Build</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/containerized.html"><strong aria-hidden="true">3.1.1.</strong> Containerized</a></li><li class="chapter-item expanded "><a href="build/meson.html"><strong aria-hidden="true">3.1.2.</strong> Meson</a></li></ol></li><li class="chapter-item expanded "><a href="use/index.html"><strong aria-hidden="true">3.2.</strong> Use</a></li><li class="chapter-item expanded "><a href="terraform/index.html"><strong aria-hidden="true">3.3.</strong> Provision</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="terraform/base-image.html"><strong aria-hidden="true">3.3.1.</strong> Base image</a></li><li class="chapter-item expanded "><a href="terraform/custom-kernel.html"><strong aria-hidden="true">3.3.2.</strong> (Optional) Custom kernel</a></li><li class="chapter-item expanded "><a href="terraform/libvirt.html"><strong aria-hidden="true">3.3.3.</strong> Use libvirt</a></li><li class="chapter-item expanded "><a href="terraform/openstack.html"><strong aria-hidden="true">3.3.4.</strong> Use OpenStack</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="policies/index.html"><strong aria-hidden="true">4.</strong> Policies</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="policies/mount.html"><strong aria-hidden="true">4.1.</strong> Mount</a></li><li class="chapter-item expanded "><a href="policies/syslog.html"><strong aria-hidden="true">4.2.</strong> Syslog</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -448,6 +448,58 @@ provide reasonable values.</p>
 <code>authorized_keys</code> - A list of ssh public keys that will be installed on all nodes<br />
 <code>repositories</code> - Additional repositories that will be added on all nodes<br />
 <code>packages</code> - Additional packages that will be installed on all nodes\</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="policies"><a class="header" href="#policies">Policies</a></h2>
+<p>lockc provides three policy levels for containers:</p>
+<ul>
+<li><strong>baseline</strong> - meant for regular applications</li>
+<li><strong>restricted</strong> - meant for applications for which we need to be more cautious
+and secure them more stricly</li>
+<li><strong>privileged</strong> - meant for part of the infrastructure which can have full
+access to host resources - i.e. CNI plugins in Kubernetes</li>
+</ul>
+<p>The default policy level is <strong>baseline</strong>. The policy level can be changed by
+the <code>pod-security.kubernetes.io/enforce</code> label on the <strong>namespace</strong> which
+the container is running in. We make an exception for the <em>kube-system</em>
+namespace for which the <strong>privileged</strong> policy is applied by default.</p>
+<p>For now there is no possibility to apply policy levels on local container
+engines (Docker, containerd, podman), but such feature is planned in the
+future.</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="mount-policies"><a class="header" href="#mount-policies">Mount policies</a></h2>
+<p>lockc comes with the following policies about bind mounts from host filesystem
+to containers (via <code>-v</code> option) for each policy level:</p>
+<ul>
+<li><strong>baseline</strong> - allow bind mounting from inside <code>/home</code> and <code>/var/data</code>.</li>
+<li><strong>restricted</strong> - does not allow any bind mounts from host</li>
+<li><strong>privileged</strong> - no restrictions, everything can be bind mounted</li>
+</ul>
+<p>The <strong>baseline</strong> behavior in lockc is slightly different than in the Kubernetes
+Pod Security Admission controller, which disallows all host mounts for baseline
+containers as well as for restricted. The motivation behind allowing <code>/home</code>
+and <code>/var/data</code> by lockc is that they are often used in local container engines
+(Docker, podman) for reasons like:</p>
+<ul>
+<li>mounting the source code to build or check</li>
+<li>storing database content on the host for local development</li>
+</ul>
+<p>By default, with the <strong>baseline</strong> policy level, this is a good example of
+not allowed behavior:</p>
+<pre><code class="language-bash"># podman --runtime $(pwd)/build/src/lockc-runc-wrapper run -ti -v /:/rootfs --rm registry.opensuse.org/opensuse/toolbox:latest
+Error: container create failed (no logs from conmon): EOF
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="syslog"><a class="header" href="#syslog">Syslog</a></h2>
+<p>lockc comes with the following policies about access to the kernel message ring
+buffer for each policy level:</p>
+<ul>
+<li><strong>baseline</strong> - not allowed</li>
+<li><strong>restricted</strong> - not allowed</li>
+<li><strong>privileged</strong> - allowed</li>
+</ul>
+<p>By default, with the <strong>baseline</strong> policy level, checking the kernel logs from
+the container is not allowed:</p>
+<pre><code class="language-bash"># podman --runtime $(pwd)/build/src/lockc-runc-wrapper run -ti --rm registry.opensuse.org/opensuse/toolbox:latest
+b10f9fa4a385:/ # dmesg
+dmesg: read kernel buffer failed: Operation not permitted
+</code></pre>
 
                     </main>
 
