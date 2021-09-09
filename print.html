@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="architecture.html"><strong aria-hidden="true">2.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">3.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/index.html"><strong aria-hidden="true">3.1.</strong> Build</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/containerized.html"><strong aria-hidden="true">3.1.1.</strong> Containerized</a></li><li class="chapter-item expanded "><a href="build/meson.html"><strong aria-hidden="true">3.1.2.</strong> Meson</a></li></ol></li><li class="chapter-item expanded "><a href="use/index.html"><strong aria-hidden="true">3.2.</strong> Use</a></li><li class="chapter-item expanded "><a href="terraform/index.html"><strong aria-hidden="true">3.3.</strong> Provision</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="terraform/base-image.html"><strong aria-hidden="true">3.3.1.</strong> Base image</a></li><li class="chapter-item expanded "><a href="terraform/custom-kernel.html"><strong aria-hidden="true">3.3.2.</strong> (Optional) Custom kernel</a></li><li class="chapter-item expanded "><a href="terraform/libvirt.html"><strong aria-hidden="true">3.3.3.</strong> Use libvirt</a></li><li class="chapter-item expanded "><a href="terraform/openstack.html"><strong aria-hidden="true">3.3.4.</strong> Use OpenStack</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="policies/index.html"><strong aria-hidden="true">4.</strong> Policies</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="policies/mount.html"><strong aria-hidden="true">4.1.</strong> Mount</a></li><li class="chapter-item expanded "><a href="policies/syslog.html"><strong aria-hidden="true">4.2.</strong> Syslog</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="architecture.html"><strong aria-hidden="true">2.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">3.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/index.html"><strong aria-hidden="true">3.1.</strong> Build</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/containerized.html"><strong aria-hidden="true">3.1.1.</strong> Containerized</a></li><li class="chapter-item expanded "><a href="build/meson.html"><strong aria-hidden="true">3.1.2.</strong> Meson</a></li></ol></li><li class="chapter-item expanded "><a href="use/index.html"><strong aria-hidden="true">3.2.</strong> Use</a></li><li class="chapter-item expanded "><a href="terraform/index.html"><strong aria-hidden="true">3.3.</strong> Provision</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="terraform/base-image.html"><strong aria-hidden="true">3.3.1.</strong> Base image</a></li><li class="chapter-item expanded "><a href="terraform/custom-kernel.html"><strong aria-hidden="true">3.3.2.</strong> (Optional) Custom kernel</a></li><li class="chapter-item expanded "><a href="terraform/libvirt.html"><strong aria-hidden="true">3.3.3.</strong> Use libvirt</a></li><li class="chapter-item expanded "><a href="terraform/openstack.html"><strong aria-hidden="true">3.3.4.</strong> Use OpenStack</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="policies/index.html"><strong aria-hidden="true">4.</strong> Policies</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="policies/mount.html"><strong aria-hidden="true">4.1.</strong> Mount</a></li><li class="chapter-item expanded "><a href="policies/syslog.html"><strong aria-hidden="true">4.2.</strong> Syslog</a></li></ol></li><li class="chapter-item expanded "><a href="demos/index.html"><strong aria-hidden="true">5.</strong> Demos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="demos/mount.html"><strong aria-hidden="true">5.1.</strong> Mount</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -448,7 +448,7 @@ provide reasonable values.</p>
 <code>authorized_keys</code> - A list of ssh public keys that will be installed on all nodes<br />
 <code>repositories</code> - Additional repositories that will be added on all nodes<br />
 <code>packages</code> - Additional packages that will be installed on all nodes\</p>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="policies"><a class="header" href="#policies">Policies</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="policies"><a class="header" href="#policies">Policies</a></h1>
 <p>lockc provides three policy levels for containers:</p>
 <ul>
 <li><strong>baseline</strong> - meant for regular applications</li>
@@ -500,6 +500,26 @@ the container is not allowed:</p>
 b10f9fa4a385:/ # dmesg
 dmesg: read kernel buffer failed: Operation not permitted
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="demos"><a class="header" href="#demos">Demos</a></h1>
+<p>This section of the book contains demos.</p>
+<ul>
+<li><a href="demos/mount.html">Mount</a> - mount policies</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="mount-policies-1"><a class="header" href="#mount-policies-1">Mount policies</a></h2>
+<h3 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h3>
+<p>The following demo shows mount policies being enforced on Kubernetes pods.</p>
+<p>YAML files can be found <a href="https://github.com/rancher-sandbox/lockc/tree/main/examples/kubernetes">here</a>.</p>
+<p>The policy violations in <a href="https://github.com/rancher-sandbox/lockc/tree/main/examples/kubernetes/deployments-should-fail.yaml">deployments-should-fail.yaml</a>
+file are:</p>
+<ul>
+<li><em>nginx-restricted-fail</em> deployment trying to make a host mount while having a
+<strong>restricted</strong> policy</li>
+<li><em>bpf-default-fail</em> and <em>bpf-baseline-fail</em> deployment trying to mount
+<code>/sys/fs/bpf</code> while having a <strong>baseline</strong> policy</li>
+<li><em>bpf-restricted-fail</em> trying to mount <code>/sys/fs/bpf</code> while having a
+<strong>restricted</strong> policy.</li>
+</ul>
+<p><a href="https://asciinema.org/a/sUxMMB5BKkJzlF1jP6k8Bxab3"><img src="https://asciinema.org/a/sUxMMB5BKkJzlF1jP6k8Bxab3.svg" alt="asciicast" /></a></p>
 
                     </main>
 
