@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html" class="active"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="architecture.html"><strong aria-hidden="true">2.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">3.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/index.html"><strong aria-hidden="true">3.1.</strong> Build</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/containerized.html"><strong aria-hidden="true">3.1.1.</strong> Containerized</a></li><li class="chapter-item expanded "><a href="build/meson.html"><strong aria-hidden="true">3.1.2.</strong> Meson</a></li></ol></li><li class="chapter-item expanded "><a href="use/index.html"><strong aria-hidden="true">3.2.</strong> Use</a></li><li class="chapter-item expanded "><a href="terraform/index.html"><strong aria-hidden="true">3.3.</strong> Provision</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="terraform/base-image.html"><strong aria-hidden="true">3.3.1.</strong> Base image</a></li><li class="chapter-item expanded "><a href="terraform/custom-kernel.html"><strong aria-hidden="true">3.3.2.</strong> (Optional) Custom kernel</a></li><li class="chapter-item expanded "><a href="terraform/libvirt.html"><strong aria-hidden="true">3.3.3.</strong> Use libvirt</a></li><li class="chapter-item expanded "><a href="terraform/openstack.html"><strong aria-hidden="true">3.3.4.</strong> Use OpenStack</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="policies/index.html"><strong aria-hidden="true">4.</strong> Policies</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="policies/mount.html"><strong aria-hidden="true">4.1.</strong> Mount</a></li><li class="chapter-item expanded "><a href="policies/syslog.html"><strong aria-hidden="true">4.2.</strong> Syslog</a></li></ol></li><li class="chapter-item expanded "><a href="demos/index.html"><strong aria-hidden="true">5.</strong> Demos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="demos/mount.html"><strong aria-hidden="true">5.1.</strong> Mount</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html" class="active"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="containers-do-not-contain.html"><strong aria-hidden="true">2.</strong> Containers do not contain</a></li><li class="chapter-item expanded "><a href="architecture.html"><strong aria-hidden="true">3.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">4.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/index.html"><strong aria-hidden="true">4.1.</strong> Build</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/containerized.html"><strong aria-hidden="true">4.1.1.</strong> Containerized</a></li><li class="chapter-item expanded "><a href="build/meson.html"><strong aria-hidden="true">4.1.2.</strong> Meson</a></li></ol></li><li class="chapter-item expanded "><a href="use/index.html"><strong aria-hidden="true">4.2.</strong> Use</a></li><li class="chapter-item expanded "><a href="terraform/index.html"><strong aria-hidden="true">4.3.</strong> Provision</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="terraform/base-image.html"><strong aria-hidden="true">4.3.1.</strong> Base image</a></li><li class="chapter-item expanded "><a href="terraform/custom-kernel.html"><strong aria-hidden="true">4.3.2.</strong> (Optional) Custom kernel</a></li><li class="chapter-item expanded "><a href="terraform/libvirt.html"><strong aria-hidden="true">4.3.3.</strong> Use libvirt</a></li><li class="chapter-item expanded "><a href="terraform/openstack.html"><strong aria-hidden="true">4.3.4.</strong> Use OpenStack</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="policies/index.html"><strong aria-hidden="true">5.</strong> Policies</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="policies/mount.html"><strong aria-hidden="true">5.1.</strong> Mount</a></li><li class="chapter-item expanded "><a href="policies/syslog.html"><strong aria-hidden="true">5.2.</strong> Syslog</a></li></ol></li><li class="chapter-item expanded "><a href="demos/index.html"><strong aria-hidden="true">6.</strong> Demos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="demos/mount.html"><strong aria-hidden="true">6.1.</strong> Mount</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -142,7 +142,7 @@ Containers are not as secure and isolated as VMs. By default, they expose
 a lot of information about host OS and provide ways to &quot;break out&quot; from the
 container. <strong>lockc</strong> aims to provide more isolation to containers and make them
 more secure.</p>
-<p>The <a href="containers-do-not-cointain.html">Containers do not contain</a> documentation
+<p>The <a href="containers-do-not-contain.html">Containers do not contain</a> documentation
 section explains why we mean by that phrase and what kind of behavior we want
 to restrict with <strong>lockc</strong>.</p>
 <p>The main technology behind lockc is <a href="https://ebpf.io/">eBPF</a> - to be more
@@ -170,7 +170,7 @@ are licensed under <a href="https://github.com/rancher-sandbox/lockc/blob/main/s
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="next" href="architecture.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="containers-do-not-contain.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         <div style="clear: both"></div>
@@ -179,7 +179,7 @@ are licensed under <a href="https://github.com/rancher-sandbox/lockc/blob/main/s
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="next" href="architecture.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="containers-do-not-contain.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
