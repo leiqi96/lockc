@@ -138,8 +138,26 @@
 <p>The first step to try out lockc is to build it. There are two ways to do
 that:</p>
 <ul>
-<li><strong><a href="containerized.html">Containerized</a></strong> - build project binaries within container</li>
-<li><strong><a href="meson.html">Meson</a></strong> - build binaries with Meson</li>
+<li><strong><a href="dapper.html">Dapper</a></strong> - build binaries within container
+<ul>
+<li>doesn't require any dependencies on the host system (except Docker)</li>
+<li>ensures that Rust, Cargo and all dependencies are in the newest version</li>
+<li>ensures the same behavior as on CI, aims to reduce &quot;it worked on machine&quot;
+kind of problems</li>
+<li>recommended for
+<ul>
+<li>trying out the project (especially if there is no interest in changing
+the code)</li>
+<li>final build before submitting changes in the code</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><a href="cargo.html">Cargo</a></strong> - build binaries with Cargo (Rust build system) on the host
+<ul>
+<li>convenient for local development, IDE/editor integration</li>
+</ul>
+</li>
 </ul>
 
                     </main>

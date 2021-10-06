@@ -319,61 +319,29 @@ and determines which policy should be applied on a container</li>
 <p>The first step to try out lockc is to build it. There are two ways to do
 that:</p>
 <ul>
-<li><strong><a href="build/containerized.html">Containerized</a></strong> - build project binaries within container</li>
-<li><strong><a href="build/meson.html">Meson</a></strong> - build binaries with Meson</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div><h3 id="containerized-build"><a class="header" href="#containerized-build">Containerized build</a></h3>
-<p>One option for building lockc is using the <code>containerized-build.sh</code> script
-to perform the build inside container, without installing needed
-dependencies on the host system.</p>
-<p>This guide assumes that you have <code>docker</code> or any other container engine
-installed.</p>
-<p>The build can be performed by running the following command:</p>
-<pre><code class="language-bash">./containerized-build.sh build
-</code></pre>
-<p>or simply:</p>
-<pre><code class="language-bash">./containerized-build.sh
-</code></pre>
-<p><code>build</code> is the default subcommand of <code>containerized-build</code>. There are
-several other subcommands:</p>
-<pre><code class="language-bash">$ ./containerized-build.sh help
-Usage: containerized-build.sh &lt;subcommand&gt;
-
-Subcommands:
-    gen        Compile BPF programs and generate BPF CO-RE skeleton
-    build      Build lockc
-    install    Install lockc
-    fmt        Autoformat code
-    lint       Code analysis
-    help       Show help information
-</code></pre>
-<p>For following this guide, using the <code>build</code> subcommand is enough.</p>
-<p><code>./containerized-build.sh install</code> can be used to install
-lockc in your host system, which by default means directories like
-<code>/usr/bin</code>, <code>/etc</code>. Target directories can be customized by <code>DESTDIR</code>,
-<code>PREFIX</code>, <code>BINDIR</code>, <code>UNITDIR</code> and <code>SYSCONFDIR</code> environment variables.</p>
-<p><code>build</code> should result in binaries produced in the <code>build/</code> directory:</p>
-<pre><code class="language-bash">$ ls build/
-lockcd  lockc-runc-wrapper
-</code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h3 id="meson"><a class="header" href="#meson">Meson</a></h3>
-<p>If you are comfortable with installing all dependencies on your host
-system, you need to install the following software:</p>
+<li><strong><a href="build/dapper.html">Dapper</a></strong> - build binaries within container
 <ul>
-<li>meson</li>
-<li>rust, cargo</li>
-<li>llvm, clang</li>
-<li>libbpf</li>
-<li>bpftool</li>
+<li>doesn't require any dependencies on the host system (except Docker)</li>
+<li>ensures that Rust, Cargo and all dependencies are in the newest version</li>
+<li>ensures the same behavior as on CI, aims to reduce &quot;it worked on machine&quot;
+kind of problems</li>
+<li>recommended for
+<ul>
+<li>trying out the project (especially if there is no interest in changing
+the code)</li>
+<li>final build before submitting changes in the code</li>
 </ul>
-<p>Build can be performed by the following commands:</p>
-<pre><code class="language-bash">CC=clang meson build
-cd build
-meson compile
-</code></pre>
-<p>Installation can be perfomed by:</p>
-<pre><code class="language-bash">meson install
-</code></pre>
+</li>
+</ul>
+</li>
+<li><strong><a href="build/cargo.html">Cargo</a></strong> - build binaries with Cargo (Rust build system) on the host
+<ul>
+<li>convenient for local development, IDE/editor integration</li>
+</ul>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="containerized"><a class="header" href="#containerized">Containerized</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="meson"><a class="header" href="#meson">Meson</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="using-lockc-locally"><a class="header" href="#using-lockc-locally">Using lockc locally</a></h2>
 <p>lockc can be used on the local system if you want to secure your local
 container engine (docker, podman).</p>
