@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="containers-do-not-contain.html"><strong aria-hidden="true">2.</strong> Containers do not contain</a></li><li class="chapter-item expanded "><a href="architecture.html"><strong aria-hidden="true">3.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">4.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/index.html"><strong aria-hidden="true">4.1.</strong> Build</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/containerized.html"><strong aria-hidden="true">4.1.1.</strong> Containerized</a></li><li class="chapter-item expanded "><a href="build/meson.html"><strong aria-hidden="true">4.1.2.</strong> Meson</a></li></ol></li><li class="chapter-item expanded "><a href="use/index.html"><strong aria-hidden="true">4.2.</strong> Use</a></li><li class="chapter-item expanded "><a href="terraform/index.html"><strong aria-hidden="true">4.3.</strong> Provision</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="terraform/base-image.html"><strong aria-hidden="true">4.3.1.</strong> Base image</a></li><li class="chapter-item expanded "><a href="terraform/custom-kernel.html"><strong aria-hidden="true">4.3.2.</strong> (Optional) Custom kernel</a></li><li class="chapter-item expanded "><a href="terraform/libvirt.html"><strong aria-hidden="true">4.3.3.</strong> Use libvirt</a></li><li class="chapter-item expanded "><a href="terraform/openstack.html"><strong aria-hidden="true">4.3.4.</strong> Use OpenStack</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="policies/index.html"><strong aria-hidden="true">5.</strong> Policies</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="policies/mount.html"><strong aria-hidden="true">5.1.</strong> Mount</a></li><li class="chapter-item expanded "><a href="policies/syslog.html"><strong aria-hidden="true">5.2.</strong> Syslog</a></li></ol></li><li class="chapter-item expanded "><a href="demos/index.html"><strong aria-hidden="true">6.</strong> Demos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="demos/mount.html"><strong aria-hidden="true">6.1.</strong> Mount</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="containers-do-not-contain.html"><strong aria-hidden="true">2.</strong> Containers do not contain</a></li><li class="chapter-item expanded "><a href="architecture.html"><strong aria-hidden="true">3.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">4.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/index.html"><strong aria-hidden="true">4.1.</strong> Build</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/dapper.html"><strong aria-hidden="true">4.1.1.</strong> Dapper</a></li><li class="chapter-item expanded "><a href="build/cargo.html"><strong aria-hidden="true">4.1.2.</strong> Cargo</a></li></ol></li><li class="chapter-item expanded "><a href="use/index.html"><strong aria-hidden="true">4.2.</strong> Use</a></li><li class="chapter-item expanded "><a href="terraform/index.html"><strong aria-hidden="true">4.3.</strong> Provision</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="terraform/base-image.html"><strong aria-hidden="true">4.3.1.</strong> Base image</a></li><li class="chapter-item expanded "><a href="terraform/custom-kernel.html"><strong aria-hidden="true">4.3.2.</strong> (Optional) Custom kernel</a></li><li class="chapter-item expanded "><a href="terraform/libvirt.html"><strong aria-hidden="true">4.3.3.</strong> Use libvirt</a></li><li class="chapter-item expanded "><a href="terraform/openstack.html"><strong aria-hidden="true">4.3.4.</strong> Use OpenStack</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="policies/index.html"><strong aria-hidden="true">5.</strong> Policies</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="policies/mount.html"><strong aria-hidden="true">5.1.</strong> Mount</a></li><li class="chapter-item expanded "><a href="policies/syslog.html"><strong aria-hidden="true">5.2.</strong> Syslog</a></li></ol></li><li class="chapter-item expanded "><a href="demos/index.html"><strong aria-hidden="true">6.</strong> Demos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="demos/mount.html"><strong aria-hidden="true">6.1.</strong> Mount</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -340,8 +340,154 @@ the code)</li>
 </ul>
 </li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="containerized"><a class="header" href="#containerized">Containerized</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="meson"><a class="header" href="#meson">Meson</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h3 id="dapper"><a class="header" href="#dapper">Dapper</a></h3>
+<p>One option for building lockc is using dapper to perform the build inside
+container, without installing needed dependencies on the host system.</p>
+<p>This guide assumes that you have <code>docker</code> or any other container engine
+installed.</p>
+<p>The first step is to install dapper, if it's not present. It can be done
+either by downloading a binary:</p>
+<pre><code class="language-bash">curl -sL https://releases.rancher.com/dapper/latest/dapper-$(uname -s)-$(uname -m) &gt; /usr/local/bin/dapper
+chmod +x /usr/local/bin/dapper
+</code></pre>
+<p>Or by using <code>go</code>:</p>
+<pre><code class="language-bash">go install github.com/rancher/dapper@latest
+</code></pre>
+<p>Dapper should be launched always in the main directory of the project, where
+<code>Dockerfile.dapper</code> file is present.</p>
+<p>Our build container image has no entrypoint, so calling <code>dapper</code> without any
+argument is spawning a shell inside the container:</p>
+<pre><code class="language-bash">$ dapper
+[...]
+root@ea133ef3d28e:/source#
+</code></pre>
+<p>Usually we will be interested in using <code>cargo</code> inside the container spawned by
+dapper.
+<a href="build/cargo.html">More information about cargo can be found here.</a></p>
+<p>The build (of both BPF and userspace part) can be performed by running the
+following command:</p>
+<pre><code class="language-bash">dapper cargo build
+</code></pre>
+<p>A successful build should result in binaries being present in <code>target/debug</code>
+directory.</p>
+<p>Running tests:</p>
+<pre><code class="language-bash">dapper cargo test
+</code></pre>
+<p>Running lints:</p>
+<pre><code class="language-bash">dapper cargo clippy
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h3 id="cargo"><a class="header" href="#cargo">Cargo</a></h3>
+<p>If you are comfortable with installing all dependencies on your host system,
+you need to install the following software:</p>
+<ul>
+<li>LLVM</li>
+<li>libbpf, bpftool</li>
+<li>Rust, Cargo</li>
+</ul>
+<h4 id="llvm"><a class="header" href="#llvm">LLVM</a></h4>
+<p>We need a recent version of LLVM (at least 12) to build BPF programs.</p>
+<p>LLVM has an official <a href="https://apt.llvm.org/">apt repository</a> with recent
+stable versions.</p>
+<p>Distributions with up to date software repositories like Arch, Fedora, openSUSE
+Tumbleweed are shipping recent versions of LLVM.</p>
+<p>In more stable and not up to date distributions (CentOS, openSUSE Leap, RHEL,
+SLES), using some kind of development repository might be an option. For
+example, openSUSE Leap users can use the following devel repo:</p>
+<pre><code class="language-bash">zypper ar -r -p 90 https://download.opensuse.org/repositories/devel:/tools:/compiler/openSUSE_Leap_15.3/devel:tools:compiler.repo
+zypper ref
+zypper up --allow-vendor-change
+zypper in clang llvm
+</code></pre>
+<p>If there is no packaging of recent LLVM versions for your distribution, there
+is also an option to <a href="https://releases.llvm.org/download.html">download binaries</a>.</p>
+<h4 id="libbpf-bpftool"><a class="header" href="#libbpf-bpftool">libbpf, bpftool</a></h4>
+<p>libbpf is the official C library for writing, loading and managing BPF programs
+and entities. bpftool is the official CLI for interacting with BPF subsystem.</p>
+<p>Distributions with up to date software (Arch, Fedora, openSUSE Tumbleweed)
+usually provide packaging for both.</p>
+<p>Especially for more stable and less up to date distributions, but even
+generally, we would recommend to build both dependencies from source. Both of
+them are the part of the Linux kernel source.</p>
+<p>The easiest way to get the kernel source is to download a tarball available on
+<a href="https://www.kernel.org/">kernel.org</a>. Then build and install tools from it
+(the version might vary from this snippet):</p>
+<pre><code class="language-bash">tar -xvf linux-5.14.9.tar.xz
+cd linux-5.14.9
+cd tools/lib/bpf
+make -j $(nproc)
+make install prefix=/usr
+cd ../../bpf/bpftool
+make -j $(nproc)
+make install prefix=/usr
+</code></pre>
+<p>If you are interested in tracking the history of Linux kernel source and/or are
+comfortable using git for it, you can clone one of the git trees:</p>
+<ul>
+<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/">stable tree</a> -
+stable releases and release candidates, this is where the tarball comes from</li>
+<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/">mainline tree</a> -
+patches accepted by Linus, release candidates</li>
+<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/">bpf-next tree</a> -
+development of BPF features, before being mainlined</li>
+<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git/">bpf tree</a> -
+BPF bugfixes which are backported to the stable tree</li>
+</ul>
+<p>Assuming you want to use the stable tree:</p>
+<pre><code class="language-bash">git clone git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+cd linux
+git tag -l # List available tags
+git checkout v5.14.9 # Check out to whatever is the newest
+cd tools/lib/bpf
+make -j $(nproc)
+make install prefix=/usr
+cd ../../bpf/bpftool
+make -j $(nproc)
+make install prefix=/usr
+</code></pre>
+<h4 id="installing-rust"><a class="header" href="#installing-rust">Installing Rust</a></h4>
+<p>Our recommended way of installing Rust is using <strong>rustup</strong>.
+<a href="https://rustup.rs/">Their website</a> contains installation instruction.</p>
+<p>After installing rustup, let's install lint tools:</p>
+<pre><code class="language-bash">rustup component add clippy rustfmt
+</code></pre>
+<p>And then cargo-libbpf, needed for building the BPF part:</p>
+<pre><code class="language-bash">cargo install libbpf-cargo
+</code></pre>
+<h4 id="building-lockc-1"><a class="header" href="#building-lockc-1">Building lockc</a></h4>
+<p>After installing all needed dependencies, it's time to build lockc.</p>
+<p>The build of the project can be done with:</p>
+<pre><code class="language-bash">cargo build
+</code></pre>
+<p>Running tests:</p>
+<pre><code class="language-bash">cargo test
+</code></pre>
+<p>Running lints:</p>
+<pre><code class="language-bash">cargo clippy
+</code></pre>
+<h4 id="installing-lockc"><a class="header" href="#installing-lockc">Installing lockc</a></h4>
+<p>To install lockc on your host, use the following command:</p>
+<pre><code class="language-bash">cargo xtask install
+</code></pre>
+<p>Do not run this command with sudo! Why?</p>
+<p>tl;dr: you will be asked for password when necessary, don't worry!</p>
+<p>Explanation: Running cargo with sudo ends with weird consequences like not
+seing cargo content from your home directory or leaving some files owned by
+root in <code>target</code>. When any destination directory is owned by root, sudo will
+be launched automatically by <code>xtask install</code> just to perform necessary
+installation steps.</p>
+<p>By default it tries to install lockc binaries in <code>/usr/local/bin</code>, but the
+destination directory can be changed by the following arguments:</p>
+<ul>
+<li><code>--destdir</code> - the rootfs of your system, default: <code>/</code></li>
+<li><code>--prefix</code> - prefix of the most of installation destinations, default:
+<code>usr/local</code></li>
+<li><code>--bindir</code> - directory for binary files, default: <code>bin</code></li>
+<li><code>--unitdir</code> - directory for systemd units, default: <code>lib/systemd/system</code></li>
+<li><code>--sysconfdir</code> - directory for configuration files, default: <code>etc</code></li>
+</ul>
+<p>By default, binaries are installed from the <code>debug</code> target profile. If you want
+to change it, use the <code>--profile</code> argument. <code>--profile release</code> is what you
+most likely want to use when packaging or installing on the production system.</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="using-lockc-locally"><a class="header" href="#using-lockc-locally">Using lockc locally</a></h2>
 <p>lockc can be used on the local system if you want to secure your local
 container engine (docker, podman).</p>
