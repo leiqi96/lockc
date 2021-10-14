@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="containers-do-not-contain.html"><strong aria-hidden="true">2.</strong> Containers do not contain</a></li><li class="chapter-item expanded "><a href="architecture.html"><strong aria-hidden="true">3.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">4.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/index.html"><strong aria-hidden="true">4.1.</strong> Build</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/dapper.html"><strong aria-hidden="true">4.1.1.</strong> Dapper</a></li><li class="chapter-item expanded "><a href="build/cargo.html"><strong aria-hidden="true">4.1.2.</strong> Cargo</a></li></ol></li><li class="chapter-item expanded "><a href="use/index.html"><strong aria-hidden="true">4.2.</strong> Use</a></li><li class="chapter-item expanded "><a href="terraform/index.html"><strong aria-hidden="true">4.3.</strong> Provision</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="terraform/base-image.html"><strong aria-hidden="true">4.3.1.</strong> Base image</a></li><li class="chapter-item expanded "><a href="terraform/custom-kernel.html"><strong aria-hidden="true">4.3.2.</strong> (Optional) Custom kernel</a></li><li class="chapter-item expanded "><a href="terraform/libvirt.html"><strong aria-hidden="true">4.3.3.</strong> Use libvirt</a></li><li class="chapter-item expanded "><a href="terraform/openstack.html"><strong aria-hidden="true">4.3.4.</strong> Use OpenStack</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="policies/index.html"><strong aria-hidden="true">5.</strong> Policies</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="policies/mount.html"><strong aria-hidden="true">5.1.</strong> Mount</a></li><li class="chapter-item expanded "><a href="policies/syslog.html"><strong aria-hidden="true">5.2.</strong> Syslog</a></li></ol></li><li class="chapter-item expanded "><a href="demos/index.html"><strong aria-hidden="true">6.</strong> Demos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="demos/mount.html"><strong aria-hidden="true">6.1.</strong> Mount</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="containers-do-not-contain.html"><strong aria-hidden="true">2.</strong> Containers do not contain</a></li><li class="chapter-item expanded "><a href="architecture.html"><strong aria-hidden="true">3.</strong> Architecture</a></li><li class="chapter-item expanded "><a href="configuration.html"><strong aria-hidden="true">4.</strong> Getting started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/index.html"><strong aria-hidden="true">4.1.</strong> Build</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="build/dapper.html"><strong aria-hidden="true">4.1.1.</strong> Dapper</a></li><li class="chapter-item expanded "><a href="build/cargo.html"><strong aria-hidden="true">4.1.2.</strong> Cargo</a></li></ol></li><li class="chapter-item expanded "><a href="use/index.html"><strong aria-hidden="true">4.2.</strong> Use</a></li><li class="chapter-item expanded "><a href="terraform/index.html"><strong aria-hidden="true">4.3.</strong> Provision</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="terraform/base-image.html"><strong aria-hidden="true">4.3.1.</strong> Base image</a></li><li class="chapter-item expanded "><a href="terraform/custom-kernel.html"><strong aria-hidden="true">4.3.2.</strong> (Optional) Custom kernel</a></li><li class="chapter-item expanded "><a href="terraform/libvirt.html"><strong aria-hidden="true">4.3.3.</strong> Use libvirt</a></li><li class="chapter-item expanded "><a href="terraform/openstack.html"><strong aria-hidden="true">4.3.4.</strong> Use OpenStack</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="policies/index.html"><strong aria-hidden="true">5.</strong> Policies</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="policies/file-access.html"><strong aria-hidden="true">5.1.</strong> File access</a></li><li class="chapter-item expanded "><a href="policies/mount.html"><strong aria-hidden="true">5.2.</strong> Mount</a></li><li class="chapter-item expanded "><a href="policies/syslog.html"><strong aria-hidden="true">5.3.</strong> Syslog</a></li></ol></li><li class="chapter-item expanded "><a href="demos/index.html"><strong aria-hidden="true">6.</strong> Demos</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="demos/mount.html"><strong aria-hidden="true">6.1.</strong> Mount</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -710,6 +710,84 @@ namespace for which the <strong>privileged</strong> policy is applied by default
 <p>For now there is no possibility to apply policy levels on local container
 engines (Docker, containerd, podman), but such feature is planned in the
 future.</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="file-access"><a class="header" href="#file-access">File access</a></h2>
+<p>lockc comes with policies about file access which is based on allow- and
+deny-listing. <strong>Baseline</strong> and <strong>restricted</strong> policies have their own pairs of
+lists. All those lists should contain path prefixes. All the children of listed
+paths/directories are included, since the decision is made by prefix matching.</p>
+<p>The deny list has precedence over allow list. That's because main purpose of
+the deny list is specifying exceptions whose prefixes are specified in the
+allow list, but we don't want to allow them.</p>
+<p>To sum it up, when any process in the container tries to access a file, lockc:</p>
+<ol>
+<li>Checks whether the given path's prefix is in the deny list. If yes, denies
+the access.</li>
+<li>Checks whether the given path's prefix is in the allow list. If yes, allows
+the access.</li>
+<li>In case of no matches, denies the access.</li>
+</ol>
+<p>By default, the contents of lists are:</p>
+<ul>
+<li><strong>baseline</strong>
+<ul>
+<li>allow list
+<ul>
+<li><em>/bin</em></li>
+<li><em>/dev/console</em></li>
+<li><em>/dev/full</em></li>
+<li><em>/dev/null</em></li>
+<li><em>/dev/pts</em></li>
+<li><em>/dev/tty</em></li>
+<li><em>/dev/urandom</em></li>
+<li><em>/dev/zero</em></li>
+<li><em>/etc</em></li>
+<li><em>/home</em></li>
+<li><em>/lib</em></li>
+<li><em>/proc</em></li>
+<li><em>/sys/fs/cgroup</em></li>
+<li><em>/tmp</em></li>
+<li><em>/usr</em></li>
+<li><em>/var</em></li>
+</ul>
+</li>
+<li>deny list
+<ul>
+<li><em>/proc/acpi</em></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>restricted</strong>
+<ul>
+<li>allow list
+<ul>
+<li><em>/bin</em></li>
+<li><em>/dev/console</em></li>
+<li><em>/dev/full</em></li>
+<li><em>/dev/null</em></li>
+<li><em>/dev/pts</em></li>
+<li><em>/dev/tty</em></li>
+<li><em>/dev/urandom</em></li>
+<li><em>/dev/zero</em></li>
+<li><em>/etc</em></li>
+<li><em>/home</em></li>
+<li><em>/lib</em></li>
+<li><em>/proc</em></li>
+<li><em>/sys/fs/cgroup</em></li>
+<li><em>/tmp</em></li>
+<li><em>/usr</em></li>
+<li><em>/var</em></li>
+</ul>
+</li>
+<li>deny list
+<ul>
+<li><em>/proc/acpi</em></li>
+<li><em>/proc/sys</em></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="mount-policies"><a class="header" href="#mount-policies">Mount policies</a></h2>
 <p>lockc comes with the following policies about bind mounts from host filesystem
 to containers (via <code>-v</code> option) for each policy level:</p>
