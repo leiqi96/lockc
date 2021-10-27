@@ -134,7 +134,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="containers-to-not-contain"><a class="header" href="#containers-to-not-contain">Containers to not contain</a></h1>
+                        <h1 id="containers-do-not-contain"><a class="header" href="#containers-do-not-contain">Containers do not contain</a></h1>
 <p>Many people assume that containers:</p>
 <ul>
 <li>provide the same or similar isolation to virtual machines</li>
@@ -162,10 +162,7 @@ filesystem are <strong>not namespaced</strong>, which means that the content of 
 directories is <strong>exactly the same as on the host OS</strong>. Examples:</p>
 <ul>
 <li>Kernel filesystems under <em>/sys</em></li>
-<li><em>/proc/bus</em></li>
-<li><em>/proc/irq</em></li>
-<li><em>/proc/sys</em></li>
-<li><em>/proc/sysrq-trigger</em></li>
+<li>many sysctls under <em>/proc/sys</em></li>
 </ul>
 <p>For non-privileged containers, the content of those directories is read-only.
 However, privileged containers can write to them. In both cases, we think that
