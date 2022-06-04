@@ -49,6 +49,13 @@ pub fn attach_programs(bpf: &mut Bpf) -> Result<(), AttachError> {
     sched_process_fork.load("sched_process_fork", &btf)?;
     sched_process_fork.attach()?;
 
+    let sched_process_exit: &mut BtfTracePoint = bpf
+    .program_mut("sched_process_exit")
+    .ok_or(AttachError::ProgLoad)?
+    .try_into()?;
+    sched_process_exit.load("sched_process_exit", &btf)?;
+    sched_process_exit.attach()?;
+    
     let clone_audit: &mut Lsm = bpf
         .program_mut("task_alloc")
         .ok_or(AttachError::ProgLoad)?

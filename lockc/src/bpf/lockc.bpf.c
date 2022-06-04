@@ -78,6 +78,31 @@ static __always_inline int handle_new_process(struct task_struct *parent,
 }
 
 /*
+ * delete_process - a process exits in container 
+ * @task: the exited task
+ * 
+ * Return: 0 if all operations sucessful, otherwise an error code.
+ */
+static __always_inline int delete_process(struct task_struct *task)
+{
+	int err;
+	pid_t pid = BPF_CORE_READ(task, pid);
+
+	struct process *v= bpf_map_lookup_elem(&processes, &pid);
+	if ( !v ){
+		bpf_printk("could not find containerized process %d\n", pid);
+		return 0;
+	}
+		
+	bpf_printk("deleting containerized process pid %d\n", pid);
+	err = bpf_map_delete_elem(&processes, &pid);
+	if (err < 0)
+		return err;
+
+	return 0;
+}
+
+/*
  * get_policy_level - find the policy level for the given process.
  * @pid: the PID of the process to find the policy for
  *
@@ -139,6 +164,18 @@ int BPF_PROG(sched_process_fork, struct task_struct *parent,
 
 	return handle_new_process(parent, child);
 }
+
+SEC("tp_btf/sched_process_exit")
+int BPF_PROG(sched_process_exit, struct task_struct *task)
+{
+	if (task == NULL) {
+		bpf_printk("error: sched_process_exit:task is NULL\n");
+		return -EPERM;
+	}
+
+	return delete_process(task);
+}
+
 
 /*
  * clone_audit - LSM program triggered by clone().
